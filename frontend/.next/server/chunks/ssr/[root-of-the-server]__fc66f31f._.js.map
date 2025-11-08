@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/USER/Desktop/LocaFind/frontend/src/app/page.jsx"],"sourcesContent":["// import Image from \"next/image\";\n// import Navbar from \"./components/head\";\n// import Counter from \"./components/button\";\nimport HomeSection from \"./components/Hero/Home\";\n\nexport default function Home() {\n  return (\n    <>\n\n    <HomeSection />\n    {/* <Navbar /> */}\n    {/* <Counter /> */}\n    \n    </>\n  );\n}\n"],"names":[],"mappings":"AAAA,kCAAkC;AAClC,0CAA0C;AAC1C,6CAA6C;;;;;;;;;;;;;AAG9B,SAAS;IACtB,qBACE;kBAEA,cAAA,8OAAC;;;;;;AAML","debugId":null}}]
+}
