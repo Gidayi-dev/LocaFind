@@ -35,5 +35,5 @@ Users can:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/locafind.git
+   git clone https://github.com/Gidayi-dev/LocaFind.git
    cd locafind

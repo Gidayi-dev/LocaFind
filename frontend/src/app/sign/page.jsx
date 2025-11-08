@@ -5,9 +5,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import LayoutWrapper from '../components/LayoutWrapper';
 
-export default function SignIn() {
+export default function Sign() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -29,18 +28,17 @@ export default function SignIn() {
   };
 
   return (
-    <LayoutWrapper>
       <section className="min-h-screen bg-gradient-to-br from-[#D3DAD9] to-[#f0f4f3] py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <Link href="/" className="inline-flex items-center space-x-2 mb-8">
+              {/* <Link href="/" className="inline-flex items-center space-x-2 mb-8">
                 <div className="w-8 h-8 bg-[#715A5A] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">L</span>
                 </div>
                 <span className="text-xl font-bold text-[#37353E]">Locafind</span>
-              </Link>
+              </Link> */}
               <h1 className="text-3xl font-bold text-[#37353E] mb-2">Welcome Back</h1>
               <p className="text-[#44444E]">Sign in to your Locafind account</p>
             </div>
@@ -139,6 +137,8 @@ export default function SignIn() {
           </div>
         </div>
       </section>
-    </LayoutWrapper>
+
   );
 }
+
+// app/signin/page.jsx

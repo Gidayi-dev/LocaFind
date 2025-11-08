@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import LayoutWrapper from '../components/LayoutWrapper';
+// import LayoutWrapper from '../components/LayoutWrapper';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,10 @@ export default function SignUp() {
     password: '',
     confirmPassword: '',
     role: 'user', // Default role
+    businessName: '',
+    businessType: '',
+    businessAddress: '',
+    businessDescription: '',
     acceptTerms: false
   });
 
@@ -30,19 +34,31 @@ export default function SignUp() {
     });
   };
 
+  const businessTypes = [
+    'Restaurant & Food',
+    'Retail & Shopping',
+    'Services & Repair',
+    'Healthcare & Pharmacy',
+    'Beauty & Salon',
+    'Grocery & Supermarket',
+    'Electronics & Tech',
+    'Fashion & Clothing',
+    'Other'
+  ];
+
   return (
-    <LayoutWrapper>
+    // <LayoutWrapper>
       <section className="min-h-screen bg-gradient-to-br from-[#D3DAD9] to-[#f0f4f3] py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <Link href="/" className="inline-flex items-center space-x-2 mb-8">
+              {/* <Link href="/" className="inline-flex items-center space-x-2 mb-8">
                 <div className="w-8 h-8 bg-[#715A5A] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">L</span>
                 </div>
                 <span className="text-xl font-bold text-[#37353E]">Locafind</span>
-              </Link>
+              </Link> */}
               <h1 className="text-3xl font-bold text-[#37353E] mb-2">Create Account</h1>
               <p className="text-[#44444E]">Join the Locafind community today</p>
             </div>
@@ -142,6 +158,81 @@ export default function SignUp() {
                   </div>
                 </div>
 
+                {/* Business Owner Additional Fields */}
+                {formData.role === 'vendor' && (
+                  <div className="space-y-4 p-4 bg-[#D3DAD9] rounded-lg border border-[#715A5A]">
+                    <h3 className="font-semibold text-[#37353E] mb-2">Business Information</h3>
+                    
+                    {/* Business Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-[#37353E] mb-2">
+                        Business Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="businessName"
+                        value={formData.businessName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white"
+                        placeholder="Enter your business name"
+                        required={formData.role === 'vendor'}
+                      />
+                    </div>
+
+                    {/* Business Type */}
+                    <div>
+                      <label className="block text-sm font-medium text-[#37353E] mb-2">
+                        Business Type *
+                      </label>
+                      <select
+                        name="businessType"
+                        value={formData.businessType}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white"
+                        required={formData.role === 'vendor'}
+                      >
+                        <option value="">Select business type</option>
+                        {businessTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Business Address */}
+                    <div>
+                      <label className="block text-sm font-medium text-[#37353E] mb-2">
+                        Business Address *
+                      </label>
+                      <input
+                        type="text"
+                        name="businessAddress"
+                        value={formData.businessAddress}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white"
+                        placeholder="Enter your business address"
+                        required={formData.role === 'vendor'}
+                      />
+                    </div>
+
+                    {/* Business Description */}
+                    <div>
+                      <label className="block text-sm font-medium text-[#37353E] mb-2">
+                        Business Description
+                      </label>
+                      <textarea
+                        name="businessDescription"
+                        value={formData.businessDescription}
+                        onChange={handleChange}
+                        rows="3"
+                        className="w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white resize-none"
+                        placeholder="Briefly describe your business..."
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Password */}
                 <div>
                   <label className="block text-sm font-medium text-[#37353E] mb-2">
@@ -230,14 +321,14 @@ export default function SignUp() {
             <div className="text-center mt-6">
               <p className="text-[#44444E]">
                 Already have an account?{' '}
-                <Link href="/signin" className="text-[#715A5A] font-semibold hover:underline">
-                  Sign in
+                <Link href="/sign" className="text-[#715A5A] font-semibold hover:underline">
+                  Sign In
                 </Link>
               </p>
             </div>
           </div>
         </div>
       </section>
-    </LayoutWrapper>
+   
   );
 }
