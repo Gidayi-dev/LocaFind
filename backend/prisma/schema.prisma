@@ -9,5 +9,22 @@ datasource db {
 }
 
 model User {
-    id 
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?
+  name      String
+  password  String
+  role      String   @default("user") // user, vendor, admin
+  
+  // Business fields (only for vendors)
+  businessName        String?
+  businessType        String?
+  businessAddress     String?
+  businessDescription String?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
