@@ -96,12 +96,12 @@ export default function Sign() {
                 </div>
 
                 {/* Submit Button */}
-                <button
-                  type="submit"
-                  className="w-full bg-[#715A5A] text-white py-4 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold"
+                <Link
+                  href="/"
+                  className="w-full bg-[#715A5A] text-white py-4 px-41 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold"
                 >
                   Sign In
-                </button>
+                </Link>
               </form>
 
               {/* Divider */}

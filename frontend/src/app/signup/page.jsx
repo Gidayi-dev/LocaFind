@@ -288,12 +288,13 @@ export default function SignUp() {
                 </div>
 
                 {/* Submit Button */}
-                <button
-                  type="submit"
-                  className="w-full bg-[#715A5A] text-white py-4 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold"
+                
+<Link
+                  href="/sign"
+                  className="w-full bg-[#715A5A] text-white py-4 px-32 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold"
                 >
                   Create Account
-                </button>
+                </Link>
               </form>
 
               {/* Divider */}
