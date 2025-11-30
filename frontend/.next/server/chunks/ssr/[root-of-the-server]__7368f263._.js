@@ -34,7 +34,9 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 'use client';
+;
 ;
 ;
 ;
@@ -52,18 +54,9 @@ function SignUp() {
         businessDescription: '',
         acceptTerms: false
     });
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        console.log('Sign up data:', formData);
-    // Handle sign up logic here
-    };
-    const handleChange = (e)=>{
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setFormData({
-            ...formData,
-            [e.target.name]: value
-        });
-    };
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const businessTypes = [
         'Restaurant & Food',
         'Retail & Shopping',
@@ -73,10 +66,65 @@ function SignUp() {
         'Grocery & Supermarket',
         'Electronics & Tech',
         'Fashion & Clothing',
+        'Mama Mboga',
+        'Base Ya Mtura',
+        'Base ya Dopa',
         'Other'
     ];
-    return(// <LayoutWrapper>
-    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+    const handleChange = (e)=>{
+        const { name, type, value, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === 'checkbox' ? checked : value
+        });
+    };
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        // Frontend validation
+        if (formData.password !== formData.confirmPassword) {
+            setError("Passwords don't match");
+            setLoading(false);
+            return;
+        }
+        if (!formData.acceptTerms) {
+            setError('You must accept the terms and conditions');
+            setLoading(false);
+            return;
+        }
+        // Vendor validation
+        if (formData.role === 'vendor' && (!formData.businessName || !formData.businessType || !formData.businessAddress)) {
+            setError('Business name, type, and address are required for vendors');
+            setLoading(false);
+            return;
+        }
+        try {
+            // Prepare data for API
+            const { confirmPassword, acceptTerms, ...apiData } = formData;
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(apiData)
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Signup failed');
+            }
+            // Store token and user data (for testing only)
+            localStorage.setItem('token', data.data.token);
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            router.push('/sign');
+        } catch (err) {
+            setError(err.message);
+            console.error('Signup error:', err);
+        } finally{
+            setLoading(false);
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "min-h-screen bg-gradient-to-br from-[#D3DAD9] to-[#f0f4f3] py-12",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "container mx-auto px-4",
@@ -91,26 +139,34 @@ function SignUp() {
                                 children: "Create Account"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.jsx",
-                                lineNumber: 62,
-                                columnNumber: 15
+                                lineNumber: 115,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-[#44444E]",
                                 children: "Join the Locafind community today"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.jsx",
-                                lineNumber: 63,
-                                columnNumber: 15
+                                lineNumber: 116,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/signup/page.jsx",
-                        lineNumber: 55,
-                        columnNumber: 13
+                        lineNumber: 114,
+                        columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "bg-white rounded-2xl shadow-lg p-8 border border-[#D3DAD9]",
                         children: [
+                            error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-red-500 mb-4",
+                                children: error
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/signup/page.jsx",
+                                lineNumber: 120,
+                                columnNumber: 23
+                            }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
                                 onSubmit: handleSubmit,
                                 className: "space-y-6",
@@ -122,8 +178,8 @@ function SignUp() {
                                                 children: "Full Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 71,
-                                                columnNumber: 19
+                                                lineNumber: 124,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "text",
@@ -135,14 +191,14 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 74,
-                                                columnNumber: 19
+                                                lineNumber: 127,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 70,
-                                        columnNumber: 17
+                                        lineNumber: 123,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -151,8 +207,8 @@ function SignUp() {
                                                 children: "Email Address"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 87,
-                                                columnNumber: 19
+                                                lineNumber: 140,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "email",
@@ -164,14 +220,14 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 90,
-                                                columnNumber: 19
+                                                lineNumber: 141,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 86,
-                                        columnNumber: 17
+                                        lineNumber: 139,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -180,8 +236,8 @@ function SignUp() {
                                                 children: "Phone Number"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 103,
-                                                columnNumber: 19
+                                                lineNumber: 154,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "tel",
@@ -193,14 +249,14 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 106,
-                                                columnNumber: 19
+                                                lineNumber: 155,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 102,
-                                        columnNumber: 17
+                                        lineNumber: 153,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -209,25 +265,27 @@ function SignUp() {
                                                 children: "Account Type"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 119,
-                                                columnNumber: 19
+                                                lineNumber: 168,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "space-y-3",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    'user',
+                                                    'vendor'
+                                                ].map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                         className: "flex items-start space-x-3 p-4 border border-[#D3DAD9] rounded-lg cursor-pointer hover:border-[#715A5A] transition-colors",
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                                 type: "radio",
                                                                 name: "role",
-                                                                value: "user",
-                                                                checked: formData.role === 'user',
+                                                                value: role,
+                                                                checked: formData.role === role,
                                                                 onChange: handleChange,
                                                                 className: "w-4 h-4 text-[#715A5A] border-[#D3DAD9] focus:ring-[#715A5A] focus:ring-2 mt-1"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                                lineNumber: 125,
+                                                                lineNumber: 175,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -235,89 +293,42 @@ function SignUp() {
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "font-medium text-[#37353E]",
-                                                                        children: "Regular User"
+                                                                        children: role === 'user' ? 'Regular User' : 'Business Owner'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                                        lineNumber: 134,
+                                                                        lineNumber: 184,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "text-sm text-[#44444E] mt-1",
-                                                                        children: "Discover local businesses, save favorites, and contribute to the community"
+                                                                        children: role === 'user' ? 'Discover local businesses, save favorites, and contribute to the community' : 'Claim and manage your business listing, get verified, and reach more customers'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                                        lineNumber: 135,
+                                                                        lineNumber: 187,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                                lineNumber: 133,
+                                                                lineNumber: 183,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
-                                                    }, void 0, true, {
+                                                    }, role, true, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 124,
+                                                        lineNumber: 171,
                                                         columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                        className: "flex items-start space-x-3 p-4 border border-[#D3DAD9] rounded-lg cursor-pointer hover:border-[#715A5A] transition-colors",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                                                type: "radio",
-                                                                name: "role",
-                                                                value: "vendor",
-                                                                checked: formData.role === 'vendor',
-                                                                onChange: handleChange,
-                                                                className: "w-4 h-4 text-[#715A5A] border-[#D3DAD9] focus:ring-[#715A5A] focus:ring-2 mt-1"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/app/signup/page.jsx",
-                                                                lineNumber: 143,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "flex-1",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "font-medium text-[#37353E]",
-                                                                        children: "Business Owner"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/src/app/signup/page.jsx",
-                                                                        lineNumber: 152,
-                                                                        columnNumber: 25
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "text-sm text-[#44444E] mt-1",
-                                                                        children: "Claim and manage your business listing, get verified, and reach more customers"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/src/app/signup/page.jsx",
-                                                                        lineNumber: 153,
-                                                                        columnNumber: 25
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/app/signup/page.jsx",
-                                                                lineNumber: 151,
-                                                                columnNumber: 23
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 142,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                    }, this))
+                                            }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 122,
-                                                columnNumber: 19
+                                                lineNumber: 169,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 118,
-                                        columnNumber: 17
+                                        lineNumber: 167,
+                                        columnNumber: 15
                                     }, this),
                                     formData.role === 'vendor' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "space-y-4 p-4 bg-[#D3DAD9] rounded-lg border border-[#715A5A]",
@@ -327,8 +338,8 @@ function SignUp() {
                                                 children: "Business Information"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 164,
-                                                columnNumber: 21
+                                                lineNumber: 201,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
@@ -337,8 +348,8 @@ function SignUp() {
                                                         children: "Business Name *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 168,
-                                                        columnNumber: 23
+                                                        lineNumber: 203,
+                                                        columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                         type: "text",
@@ -347,17 +358,17 @@ function SignUp() {
                                                         onChange: handleChange,
                                                         className: "w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white",
                                                         placeholder: "Enter your business name",
-                                                        required: formData.role === 'vendor'
+                                                        required: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 171,
-                                                        columnNumber: 23
+                                                        lineNumber: 204,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 167,
-                                                columnNumber: 21
+                                                lineNumber: 202,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
@@ -366,43 +377,43 @@ function SignUp() {
                                                         children: "Business Type *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 184,
-                                                        columnNumber: 23
+                                                        lineNumber: 215,
+                                                        columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                                                         name: "businessType",
                                                         value: formData.businessType,
                                                         onChange: handleChange,
                                                         className: "w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white",
-                                                        required: formData.role === 'vendor',
+                                                        required: true,
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                                 value: "",
                                                                 children: "Select business type"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                                lineNumber: 194,
-                                                                columnNumber: 25
+                                                                lineNumber: 223,
+                                                                columnNumber: 23
                                                             }, this),
                                                             businessTypes.map((type)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                                     value: type,
                                                                     children: type
                                                                 }, type, false, {
                                                                     fileName: "[project]/src/app/signup/page.jsx",
-                                                                    lineNumber: 196,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 225,
+                                                                    columnNumber: 25
                                                                 }, this))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 187,
-                                                        columnNumber: 23
+                                                        lineNumber: 216,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 183,
-                                                columnNumber: 21
+                                                lineNumber: 214,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
@@ -411,8 +422,8 @@ function SignUp() {
                                                         children: "Business Address *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 205,
-                                                        columnNumber: 23
+                                                        lineNumber: 232,
+                                                        columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                         type: "text",
@@ -421,17 +432,17 @@ function SignUp() {
                                                         onChange: handleChange,
                                                         className: "w-full px-4 py-3 border border-[#D3DAD9] rounded-lg focus:ring-2 focus:ring-[#715A5A] focus:border-transparent bg-white",
                                                         placeholder: "Enter your business address",
-                                                        required: formData.role === 'vendor'
+                                                        required: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 208,
-                                                        columnNumber: 23
+                                                        lineNumber: 233,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 204,
-                                                columnNumber: 21
+                                                lineNumber: 231,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
@@ -440,8 +451,8 @@ function SignUp() {
                                                         children: "Business Description"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 221,
-                                                        columnNumber: 23
+                                                        lineNumber: 244,
+                                                        columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
                                                         name: "businessDescription",
@@ -452,20 +463,20 @@ function SignUp() {
                                                         placeholder: "Briefly describe your business..."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 224,
-                                                        columnNumber: 23
+                                                        lineNumber: 245,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 220,
-                                                columnNumber: 21
+                                                lineNumber: 243,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 163,
-                                        columnNumber: 19
+                                        lineNumber: 200,
+                                        columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -474,8 +485,8 @@ function SignUp() {
                                                 children: "Password"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 238,
-                                                columnNumber: 19
+                                                lineNumber: 259,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "password",
@@ -487,14 +498,14 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 241,
-                                                columnNumber: 19
+                                                lineNumber: 260,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 237,
-                                        columnNumber: 17
+                                        lineNumber: 258,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
@@ -503,8 +514,8 @@ function SignUp() {
                                                 children: "Confirm Password"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 254,
-                                                columnNumber: 19
+                                                lineNumber: 272,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "password",
@@ -516,14 +527,14 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 257,
-                                                columnNumber: 19
+                                                lineNumber: 273,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 253,
-                                        columnNumber: 17
+                                        lineNumber: 271,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex items-start space-x-3",
@@ -537,8 +548,8 @@ function SignUp() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 270,
-                                                columnNumber: 19
+                                                lineNumber: 286,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "text-sm text-[#44444E]",
@@ -551,8 +562,8 @@ function SignUp() {
                                                         children: "Terms of Service"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 280,
-                                                        columnNumber: 21
+                                                        lineNumber: 296,
+                                                        columnNumber: 19
                                                     }, this),
                                                     ' ',
                                                     "and",
@@ -563,35 +574,36 @@ function SignUp() {
                                                         children: "Privacy Policy"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/signup/page.jsx",
-                                                        lineNumber: 284,
-                                                        columnNumber: 21
+                                                        lineNumber: 300,
+                                                        columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/signup/page.jsx",
-                                                lineNumber: 278,
-                                                columnNumber: 19
+                                                lineNumber: 294,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 269,
-                                        columnNumber: 17
+                                        lineNumber: 285,
+                                        columnNumber: 15
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: "/sign",
-                                        className: "w-full bg-[#715A5A] text-white py-4 px-32 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold",
-                                        children: "Create Account"
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "submit",
+                                        disabled: loading,
+                                        className: "w-full bg-[#715A5A] text-white py-4 rounded-lg hover:bg-[#5a4a4a] transition-colors font-semibold",
+                                        children: loading ? 'Creating Account...' : 'Create Account'
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 292,
-                                        columnNumber: 1
+                                        lineNumber: 307,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/signup/page.jsx",
-                                lineNumber: 68,
-                                columnNumber: 15
+                                lineNumber: 121,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "my-6 flex items-center",
@@ -600,29 +612,29 @@ function SignUp() {
                                         className: "flex-1 border-t border-[#D3DAD9]"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 302,
-                                        columnNumber: 17
+                                        lineNumber: 318,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "px-4 text-sm text-[#44444E]",
                                         children: "or"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 303,
-                                        columnNumber: 17
+                                        lineNumber: 319,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex-1 border-t border-[#D3DAD9]"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.jsx",
-                                        lineNumber: 304,
-                                        columnNumber: 17
+                                        lineNumber: 320,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/signup/page.jsx",
-                                lineNumber: 301,
-                                columnNumber: 15
+                                lineNumber: 317,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "space-y-3",
@@ -638,63 +650,63 @@ function SignUp() {
                                                     d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/signup/page.jsx",
-                                                    lineNumber: 311,
-                                                    columnNumber: 21
+                                                    lineNumber: 327,
+                                                    columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
                                                     fill: "currentColor",
                                                     d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/signup/page.jsx",
-                                                    lineNumber: 312,
-                                                    columnNumber: 21
+                                                    lineNumber: 331,
+                                                    columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
                                                     fill: "currentColor",
                                                     d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/signup/page.jsx",
-                                                    lineNumber: 313,
-                                                    columnNumber: 21
+                                                    lineNumber: 335,
+                                                    columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
                                                     fill: "currentColor",
                                                     d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/signup/page.jsx",
-                                                    lineNumber: 314,
-                                                    columnNumber: 21
+                                                    lineNumber: 339,
+                                                    columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/signup/page.jsx",
-                                            lineNumber: 310,
-                                            columnNumber: 19
+                                            lineNumber: 326,
+                                            columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             className: "text-[#37353E] font-medium",
                                             children: "Sign up with Google"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/signup/page.jsx",
-                                            lineNumber: 316,
-                                            columnNumber: 19
+                                            lineNumber: 344,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/signup/page.jsx",
-                                    lineNumber: 309,
-                                    columnNumber: 17
+                                    lineNumber: 325,
+                                    columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.jsx",
-                                lineNumber: 308,
-                                columnNumber: 15
+                                lineNumber: 324,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/signup/page.jsx",
-                        lineNumber: 67,
-                        columnNumber: 13
+                        lineNumber: 119,
+                        columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "text-center mt-6",
@@ -709,36 +721,36 @@ function SignUp() {
                                     children: "Sign In"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/signup/page.jsx",
-                                    lineNumber: 325,
-                                    columnNumber: 17
+                                    lineNumber: 352,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/signup/page.jsx",
-                            lineNumber: 323,
-                            columnNumber: 15
+                            lineNumber: 350,
+                            columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/signup/page.jsx",
-                        lineNumber: 322,
-                        columnNumber: 13
+                        lineNumber: 349,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/signup/page.jsx",
-                lineNumber: 53,
-                columnNumber: 11
+                lineNumber: 113,
+                columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/signup/page.jsx",
-            lineNumber: 52,
-            columnNumber: 9
+            lineNumber: 112,
+            columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/signup/page.jsx",
-        lineNumber: 51,
-        columnNumber: 7
-    }, this));
+        lineNumber: 111,
+        columnNumber: 5
+    }, this);
 }
 }),
 ];

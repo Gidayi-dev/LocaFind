@@ -62,13 +62,12 @@ const userSchema = new mongoose.Schema({
 });
 
 // Middleware: Hash password before saving
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
     // Only hash the password if it's modified or new
-    if (!this.isModified('password')) return next()
+    if (!this.isModified('password')) return
 
     // Hash password with bcrypt
     this.password = await bcrypt.hash(this.password, 12)
-    next()
 })
 
 // Method to check if password is correct

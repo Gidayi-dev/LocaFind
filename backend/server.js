@@ -10,7 +10,7 @@ import authRoutes from './routes/auth.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Connect to DB
 connectDB();
@@ -25,6 +25,8 @@ app.use(
     credentials: true
   })
 );
+
+// app.use(express.urlencoded({ extended: true }));
 
 // Logging
 app.use(morgan('combined'));
@@ -64,7 +66,7 @@ app.use((req, res) => {
 });
 
 // Global error handler
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   console.error('Global error handler:', error);
 
   res.status(500).json({
