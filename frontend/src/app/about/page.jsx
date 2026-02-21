@@ -68,7 +68,7 @@ function About() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 mb-8">
               <span className="w-2 h-2 bg-[#D3DAD9] rounded-full animate-pulse"></span>
-              <span className="text-lg text-gray-700 font-large">OUR STORY</span>
+              <span className="text-lg text-white-700 font-large">OUR STORY</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -81,12 +81,12 @@ function About() {
               </span>
             </h1>
 
-            <p className="text-xl text-[#37353E] leading-relaxed max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-white leading-relaxed max-w-3xl mx-auto mb-8">
               Locafind began with a simple observation: the most essential local businesses the ones that form 
               the heartbeat of our neighborhoods were becoming invisible in the digital age. We're changing that.
             </p>
 
-            <p className="text-lg text-[#37353E] leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-gray leading-relaxed max-w-2xl mx-auto">
               Founded in 2025, we set out to create a platform where communities could collectively map 
               their local economy, ensuring no business remains hidden and no neighborhood need goes unmet.
             </p>
@@ -102,7 +102,7 @@ function About() {
             <div className="w-24 h-1 bg-[#715A5A] mx-auto mb-8 rounded-full"></div>
             
             <div className="bg-gradient-to-br from-[#D3DAD9] to-[#b8c4c3] rounded-3xl p-8 md:p-12 mx-auto max-w-3xl">
-              <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed font-light italic">
+              <p className="text-xl md:text-xl text-gray-800 leading-relaxed font-light italic">
                 "To empower local communities by creating the most trusted platform for discovering 
                 neighborhood businesses, ensuring every hidden gem gets the visibility it deserves."
               </p>

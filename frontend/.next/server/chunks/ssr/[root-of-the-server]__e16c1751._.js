@@ -822,7 +822,7 @@ function About() {
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "text-lg text-gray-700 font-large",
+                                            className: "text-lg text-white-700 font-large",
                                             children: "OUR STORY"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/about/page.jsx",
@@ -866,7 +866,7 @@ function About() {
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-xl text-[#37353E] leading-relaxed max-w-3xl mx-auto mb-8",
+                                    className: "text-xl text-white leading-relaxed max-w-3xl mx-auto mb-8",
                                     children: "Locafind began with a simple observation: the most essential local businesses the ones that form the heartbeat of our neighborhoods were becoming invisible in the digital age. We're changing that."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/about/page.jsx",
@@ -874,7 +874,7 @@ function About() {
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-lg text-[#37353E] leading-relaxed max-w-2xl mx-auto",
+                                    className: "text-lg text-gray leading-relaxed max-w-2xl mx-auto",
                                     children: "Founded in 2025, we set out to create a platform where communities could collectively map their local economy, ensuring no business remains hidden and no neighborhood need goes unmet."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/about/page.jsx",
@@ -923,7 +923,7 @@ function About() {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "bg-gradient-to-br from-[#D3DAD9] to-[#b8c4c3] rounded-3xl p-8 md:p-12 mx-auto max-w-3xl",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-2xl md:text-3xl text-gray-800 leading-relaxed font-light italic",
+                                    className: "text-xl md:text-xl text-gray-800 leading-relaxed font-light italic",
                                     children: '"To empower local communities by creating the most trusted platform for discovering neighborhood businesses, ensuring every hidden gem gets the visibility it deserves."'
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/about/page.jsx",

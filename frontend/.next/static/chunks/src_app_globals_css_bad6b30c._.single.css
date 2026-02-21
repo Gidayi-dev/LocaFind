@@ -1858,14 +1858,6 @@
     padding-inline: calc(var(--spacing) * 8);
   }
 
-  .px-32 {
-    padding-inline: calc(var(--spacing) * 32);
-  }
-
-  .px-41 {
-    padding-inline: calc(var(--spacing) * 41);
-  }
-
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
   }
@@ -2056,6 +2048,10 @@
 
   .text-blue-800 {
     color: var(--color-blue-800);
+  }
+
+  .text-gray-100 {
+    color: var(--color-gray-100);
   }
 
   .text-gray-200 {
@@ -2582,6 +2578,13 @@
     .md\:text-7xl {
       font-size: var(--text-7xl);
       line-height: var(--tw-leading, var(--text-7xl--line-height));
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .md\:text-xl {
+      font-size: var(--text-xl);
+      line-height: var(--tw-leading, var(--text-xl--line-height));
     }
   }
 
