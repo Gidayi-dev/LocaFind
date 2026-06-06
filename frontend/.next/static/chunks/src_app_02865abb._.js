@@ -38,7 +38,7 @@ const Header = ()=>{
             icon: '💊'
         },
         {
-            id: 'restaurants',
+            id: 'food',
             name: 'Food',
             icon: '🍴'
         },

@@ -1,31 +1,38 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
 import ListingCard from "./ListingCard";
-import { healthCareFacilities } from "@/app/data/data";
+import { foodVendors } from "@/app/data/data";
 
 const FILTERS = [
-  { key: "all",       label: "All" },
-  { key: "hospital",  label: "Hospitals" },
-  { key: "pharmacy",  label: "Pharmacies" },
-  { key: "clinic",    label: "Clinics" },
-  { key: "chp",       label: "CHPs" },
-  { key: "open",      label: "Open now" },
-  { key: "emergency", label: "24hr / Emergency" },
+  { key: "all",         label: "All" },
+  { key: "restaurant",  label: "Restaurants" },
+  { key: "kibanda",     label: "Kibandas" },
+  { key: "mama_mboga",  label: "Mama Mboga" },
+  { key: "supermarket", label: "Supermarkets" },
+  { key: "market",      label: "Markets" },
+  { key: "wholesale",   label: "Wholesale" },
+  { key: "farm",        label: "Farms" },
+  { key: "local_shop",  label: "Local Shops" },
+  { key: "open",        label: "Open Now" },
+  { key: "delivery",    label: "Delivery" },
 ];
 
-export default function Listings({ category = "Healthcare" }) {
-  const [search, setSearch]   = useState("");
-  const [filter, setFilter]   = useState("all");
+export default function FoodListings({ category = "Food & Vendors" }) {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const results = useMemo(() => {
-    return healthCareFacilities
+    return foodVendors
       .filter((l) => {
-        const matchSearch = l.name.toLowerCase().includes(search.toLowerCase());
+        const matchSearch =
+          l.name.toLowerCase().includes(search.toLowerCase()) ||
+          l.stock.some((s) => s.toLowerCase().includes(search.toLowerCase()));
         const matchFilter =
-          filter === "all"       ? true :
-          filter === "open"      ? l.open :
-          filter === "emergency" ? l.emergency :
+          filter === "all"      ? true :
+          filter === "open"     ? l.open :
+          filter === "delivery" ? l.delivery :
           l.type === filter;
         return matchSearch && matchFilter;
       })
@@ -52,7 +59,7 @@ export default function Listings({ category = "Healthcare" }) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search hospitals, clinics, pharmacies..."
+            placeholder="Search restaurants, kibandas, shops..."
             className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
         </div>
@@ -61,7 +68,7 @@ export default function Listings({ category = "Healthcare" }) {
       {/* Meta row */}
       <div className="px-4 pt-3 pb-1 flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          <span className="font-semibold text-gray-800">{results.length}</span> facilities nearby
+          <span className="font-semibold text-gray-800">{results.length}</span> vendors nearby
         </p>
         <span className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-medium">
           📍 Nairobi CBD
@@ -89,12 +96,12 @@ export default function Listings({ category = "Healthcare" }) {
       <div className="px-4 flex flex-col gap-3 pb-8">
         {results.length > 0 ? (
           results.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
+            <ListingCard key={listing.id} listing={listing} category="food" />
           ))
         ) : (
           <div className="text-center py-16 text-gray-400">
-            <p className="text-4xl mb-3">🗺</p>
-            <p className="text-sm">No facilities match your search</p>
+            <p className="text-4xl mb-3">🍽️</p>
+            <p className="text-sm">No vendors match your search</p>
           </div>
         )}
       </div>

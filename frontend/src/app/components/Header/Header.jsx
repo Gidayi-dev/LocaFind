@@ -16,7 +16,7 @@ const Header = () => {
   const categories = [
     { id: 'groceries', name: 'Groceries', icon: '🛒' },
     { id: 'pharmacy', name: 'Pharmacy', icon: '💊' },
-    { id: 'restaurants', name: 'Food', icon: '🍴' },
+    { id: 'food', name: 'Food', icon: '🍴' },
     { id: 'services', name: 'Services', icon: '🔧' },
     { id: 'healthcare', name: 'Healthcare', icon: '🏥' },
     { id: 'electronics', name: 'Electronics', icon: '📱' },
