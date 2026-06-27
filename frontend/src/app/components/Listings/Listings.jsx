@@ -1,6 +1,6 @@
 "use client";
-
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import ListingCard from "./ListingCard";
 import { healthCareFacilities } from "@/app/data/data";
 
@@ -15,8 +15,9 @@ const FILTERS = [
 ];
 
 export default function Listings({ category = "Healthcare" }) {
-  const [search, setSearch]   = useState("");
-  const [filter, setFilter]   = useState("all");
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const results = useMemo(() => {
     return healthCareFacilities
@@ -33,37 +34,46 @@ export default function Listings({ category = "Healthcare" }) {
   }, [search, filter]);
 
   return (
-    <section className="min-h-screen bg-gray-50">
+    <section className="min-h-screen" style={{ background: "#D9E0E1" }}>
 
       {/* Top bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3">
-        <button className="text-sm text-gray-500 flex items-center gap-1 hover:text-gray-800">
+      <div
+        className="px-4 py-3 flex items-center gap-3 border-b"
+        style={{ background: "#3F3A44", borderColor: "#4D4750" }}
+      >
+        <button onClick={() => router.back()} className="text-sm flex items-center gap-1 hover:opacity-80 transition" style={{ color: "#D9E0E1" }}>
           ← Back
         </button>
         <div className="flex-1" />
-        <span className="text-sm font-semibold text-gray-800">{category}</span>
+        <span className="text-sm font-semibold" style={{ color: "#FFFFFF" }}>{category}</span>
       </div>
 
       {/* Search */}
       <div className="px-4 pt-4">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#5F6368" }}>🔍</span>
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search hospitals, clinics, pharmacies..."
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl border text-sm focus:outline-none"
+            style={{ background: "#FFFFFF", borderColor: "#c5cdd0", color: "#3B3539" }}
+            onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px #7C605A55")}
+            onBlur={(e) => (e.target.style.boxShadow = "none")}
           />
         </div>
       </div>
 
       {/* Meta row */}
       <div className="px-4 pt-3 pb-1 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
-          <span className="font-semibold text-gray-800">{results.length}</span> facilities nearby
+        <p className="text-sm" style={{ color: "#5F6368" }}>
+          <span className="font-semibold" style={{ color: "#3B3539" }}>{results.length}</span> facilities nearby
         </p>
-        <span className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-medium">
+        <span
+          className="text-xs px-3 py-1 rounded-full font-medium"
+          style={{ background: "#2DBA6720", color: "#2DBA67" }}
+        >
           📍 Nairobi CBD
         </span>
       </div>
@@ -74,11 +84,12 @@ export default function Listings({ category = "Healthcare" }) {
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={`whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full border transition ${
+            className="whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full border transition"
+            style={
               filter === f.key
-                ? "bg-emerald-700 text-white border-emerald-700"
-                : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
-            }`}
+                ? { background: "#3B3438", color: "#FFFFFF", borderColor: "#3B3438" }
+                : { background: "#FFFFFF", color: "#5F6368", borderColor: "#c5cdd0" }
+            }
           >
             {f.label}
           </button>
@@ -92,7 +103,7 @@ export default function Listings({ category = "Healthcare" }) {
             <ListingCard key={listing.id} listing={listing} />
           ))
         ) : (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16" style={{ color: "#5F6368" }}>
             <p className="text-4xl mb-3">🗺</p>
             <p className="text-sm">No facilities match your search</p>
           </div>
