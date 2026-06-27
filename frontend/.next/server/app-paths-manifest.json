@@ -1,10 +1,5 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/boda/page": "app/boda/page.js",
-  "/boda/track/[id]/page": "app/boda/track/[id]/page.js",
-  "/category/food/page": "app/category/food/page.js",
-  "/category/healthcare/page": "app/category/healthcare/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/icon.png/route": "app/icon.png/route.js",
   "/page": "app/page.js"
 }
