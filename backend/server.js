@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import placesRoutes from './routes/places.js';
 
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
@@ -56,6 +57,7 @@ app.get('/api/health', (req, res) => {
 
 // Auth routes
 app.use('/api/auth', authRoutes);
+app.use('/api/places', placesRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -1,5 +1,7 @@
 {
-  "/boda/page": "app/boda/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/category/food/page": "app/category/food/page.js",
+  "/category/healthcare/page": "app/category/healthcare/page.js",
   "/icon.png/route": "app/icon.png/route.js",
   "/page": "app/page.js"
 }

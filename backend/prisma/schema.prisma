@@ -4,27 +4,59 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  phone     String?
-  name      String
-  password  String
-  role      String   @default("user") // user, vendor, admin
-  
-  // Business fields (only for vendors)
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  email               String    @unique
+  phone               String?
+  name                String
+  password            String
+  role                String    @default("user") // user, vendor, admin
   businessName        String?
   businessType        String?
   businessAddress     String?
   businessDescription String?
-  
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  listings            Listing[]
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   @@map("users")
+}
+
+model Listing {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  category    String   // food, healthcare, electronics etc
+  type        String   // restaurant, pharmacy, kibanda etc
+  address     String
+  lat         Float
+  lng         Float
+  phone       String?
+  description String?
+  open        Boolean  @default(true)
+  verified    Boolean  @default(false)
+  source      String   @default("manual") // manual or google
+
+  submittedBy String?  @db.ObjectId
+  user        User?    @relation(fields: [submittedBy], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("listings")
+}
+
+model PlaceCache {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cacheKey  String   @unique  
+  results   Json
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("place_cache")
 }
